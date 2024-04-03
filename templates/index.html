@@ -1,19 +1,16 @@
 {% extends "base.html" %}
 
 {% block title %}
-    Home
+Home
 {% endblock title %}
-
-{% block body %}
+{% block content %}
+<div class="hero-container">
+<h1>Welcome to <strong>Yarn_me</strong></h1>
+<a  href="#about" class="btn-get-started scrollto text-decoration-none">Get Started</a>
+</div>
+{% endblock content %}
+{% block body %} 
 {% load static %}
-  <!-- ======= Hero Section ======= -->
-  <section id="hero">
-    <div class="hero-container">
-      <h1>Welcome to <strong>Yarn_me</strong></h1>
-      
-      <a href="#about" class="btn-get-started scrollto text-decoration-none">Get Started</a>
-    </div>
-  </section><!-- End Hero -->
 
   <main id="main">
 
