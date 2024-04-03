@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Shops
+{% endblock title %}
+
+{% block body %} 
+
+<div class="dip">
+
+</div>
+<div class="container ">
+    <h2 class="fw-bold">Products</h2>
+<a href="/" class="text-decoration-none"><h5>Home / </a> Products</h5><hr>
+    {% for cat in allcategories %}
+    <h4 class="fw-medium">{{cat.title}}</h4><hr>
+    <div class="row">
+        {% for p in cat.product_set.all %}
+
+          <div class="col-md-3 mt-3">
+            <div class="card-body">
+            <img src="{{ p.image.url }}" alt="" class="img-fluid" style="height: 2500; object-fit: cover;">
+            <h3 class="card-title">{{p.title}}</h3>
+            <p class="card-text">{{ p.description }}</p>
+            <h6 class="card-title mb-3">Price: <strike>#{{ p.marked_price }}</strike> #{{ p.selling_price }}</h6>
+            <a href="#" class="btn btn-dark w-100 py-2">Buy Now</a>
+            <a class="btn btn-secondary w-100 py-2" href="#">Add To Cart</a>
+            </div>
+          </div>
+
+          {% endfor %}
+    </div>
+    {% endfor %}
+</div>
+{% endblock body %}
