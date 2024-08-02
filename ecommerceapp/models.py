@@ -2,9 +2,27 @@ from django.db import models
 from django.contrib.auth.models import User
 
 # Create your models here.
+class Contact(models.Model):
+    name=models.CharField(max_length=50)
+    email=models.EmailField()
+    phonenumber=models.IntegerField()
+    desc=models.TextField(max_length=500)
+   
+    def __str__(self):
+        return self.name
+
+class Admin(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    full_name = models.CharField(max_length=50)
+    image = models.ImageField(upload_to='admins')
+    mobile = models.CharField(max_length=20)
+
+    def __str__(self):
+        return self.user.username
+    
 
 class Customer(models.Model):
-   user = models.OneToOneField(User, on_delete=models.CASCADE)
+   user = models.OneToOneField(User, on_delete=models.CASCADE, related_name = 'customer', null=True, blank=True)
    full_name = models.CharField(max_length=200)
    address = models.CharField(max_length=200, null=True, blank=True)
    joined_on = models.DateTimeField(auto_now_add=True)
@@ -19,6 +37,7 @@ class Category(models.Model):
     def __str__(self):
         return self.title
     
+    
 class Product(models.Model):
     title = models.CharField(max_length=200)
     slug = models.SlugField(unique=True)
@@ -27,6 +46,7 @@ class Product(models.Model):
     marked_price = models.PositiveIntegerField()
     selling_price = models.PositiveIntegerField()
     description = models.TextField()
+    view_count = models.PositiveIntegerField(default=0)
 
     def __str__(self):
         return self.title
@@ -43,7 +63,7 @@ class Cart(models.Model):
 
 
 class CartProduct(models.Model):
-    cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name="cartproducts")
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     rate = models.PositiveIntegerField()
     quantity = models.PositiveIntegerField()
@@ -62,17 +82,31 @@ ORDER_STATUS = (
 )
 
 
+CURRENCY_CHOICES = [
+    ('USD', 'Dollar'),
+    ('EUR', 'Euro'),
+    ('NGN', 'Naira'),
+    ('CAD', 'Canadian Dollar'),
+    ('AUD', 'Australian Dollar'),
+]
+
+
 class Order(models.Model):
     cart = models.OneToOneField(Cart, on_delete=models.CASCADE)
     ordered_by = models.CharField(max_length=200)
+    email = models.EmailField(null=True, blank=True)
     shipping_address = models.CharField(max_length=200)
     mobile = models.CharField(max_length=10)
-    email = models.EmailField(null=True, blank=True)
     subtotal = models.PositiveIntegerField()
     discount = models.PositiveIntegerField()
     total = models.PositiveIntegerField()
     order_status = models.CharField(max_length=50, choices=ORDER_STATUS)
     created_at = models.DateTimeField(auto_now_add=True)
+    payment_completed = models.BooleanField(default=False, null=True, blank=True)
+    currency = models.CharField(max_length=3, choices=CURRENCY_CHOICES, default='NGN')
+    paystack_reference = models.CharField(max_length=100, blank=True, null=True)
+    order_status = models.CharField(max_length=50, default='Order Received')
 
     def __str__(self):
         return "Order: " + str(self.id)
+    

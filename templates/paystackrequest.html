@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Make Payment{% endblock title %}
+
+{% block body %}
+    <script src="https://js.paystack.co/v1/inline.js"></script>
+    <script>
+        window.onload = function() {
+            payWithPaystack();
+        };
+
+        function payWithPaystack() {
+            var handler = PaystackPop.setup({
+                key: 'pk_test_2c95a137d967a436b63eb7a3affa3a7fb2ca5248', // Replace with your public key
+                email: 'yarnmenigeria@gmail.com',
+                amount: {{ amount }} * 100,
+                currency: '{{ currency }}',
+                ref: '{{ reference }}',
+                onClose: function() {
+                    alert('Window closed.');
+                },
+                callback: function(response) {
+                    let message = 'Payment complete! Reference: ' + response.reference;
+                    alert(message);
+                    // Optionally, you can redirect to a success page or make an AJAX request to your backend
+                
+                     // Verify transaction on the backend
+                     fetch('/paystack-verify/', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': '{{ csrf_token }}',
+                        },
+                        body: JSON.stringify({ reference: response.reference })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === 'success') {
+                            alert('Payment verified successfully!');
+                        } else {
+                            alert('Payment verification failed.');
+
+                        }
+                    });
+                }
+            });
+            handler.openIframe();
+        }
+    </script>
+{% endblock body %}

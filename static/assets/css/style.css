@@ -348,10 +348,8 @@ h6 {
 # Hero Section
 --------------------------------------------------------------*/
 #hero {
-  width: 70%;
-  height: 70vh;
-  background: url("../../images/bdd.jpg") top center;
-  background-size: cover;
+  background: url("../../images/bdd.jpg");
+  background-size: 100%;
   position: relative;
 }
 
@@ -379,23 +377,15 @@ h6 {
   padding: 0 15px;
 }
 
-#hero h3 {
-  background: rgba(255, 255, 255, 0.1);
-  color: #fff;
-  font-size: 26px;
-  padding: 10px 30px;
-  margin-bottom: 30px;
-  border-radius: 50px;
-}
-
-#hero h1 {
+/* #hero h1 {
   margin: 0 0 10px 0;
   font-size: 48px;
   font-weight: 700;
   line-height: 56px;
   text-transform: uppercase;
   color: #fff;
-}
+  font-family: monospace;
+} */
 
 .slid {
   font-family: monospace;
@@ -403,11 +393,7 @@ h6 {
 }
 
 
-#hero h2 {
-  color: #eee;
-  margin-bottom: 40px;
-  font-size: 24px;
-}
+
 
 #hero .btn-get-started {
   font-family: "Poppins", sans-serif;
@@ -453,7 +439,7 @@ h6 {
 
 @media (max-height: 500px) {
   #hero {
-    height: 150vh;
+    height: 80vh;
   }
 }
 
@@ -479,7 +465,7 @@ section {
   font-weight: 700;
   padding: 8px 20px;
   line-height: 1;
-  margin: 0;
+  margin: auto;
   background: #fdeff2;
   color: #646464;
   display: inline-block;
@@ -892,12 +878,12 @@ section {
 
 #footer .footer-newsletter form {
   margin-top: 30px;
-  background: #fff;
+  background: #ffffffca;
   padding: 6px 10px;
   position: relative;
   border-radius: 50px;
   text-align: left;
-  border: 1px solid #f7c2cc;
+  border: 1px solid #636263;
 }
 
 #footer .footer-newsletter form input[type=email] {

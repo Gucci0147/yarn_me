@@ -28,7 +28,8 @@
 
   <!-- Template Main CSS File -->
   <link href="{% static '/assets/css/style.css' %}" rel="stylesheet">
-
+  
+  <link rel="stylesheet" href="{% static 'css/index.css' %}">
   {% block style %}{% endblock style %}
 
 </head>
@@ -36,43 +37,61 @@
 <body>
 
   <!-- ======= Header ======= -->
+   
   <header id="header" class="fixed-top bg-dark">
-    <div class="container d-flex align-items-center justify-content-between">
-
-      <a href="/" class="logo text-white">YARN_ME</a>
 
 
-      <nav id="navbar" class="navbar">
-        <ul>
-          <li><a class="nav-link scrollto active" href="/">Home</a></li>
-          <li><a class="nav-link scrollto" href="/shops">Shop</a></li>
-          <li><a class="nav-link scrollto" href="/about">About</a></li>
+    <div class="container-fluid d-flex align-items-center justify-content-between">
 
-          <li class="dropdown"><a href="#"><span>SignIn</span> <i class="bi bi-chevron-down"></i></a>
+      <a class="navbar-brand fs-3 fw-bold text-light" href="{% url 'ecommerceapp:index' %}" class="logo text-white p-3">YARN_ME<span class="text-success fw.bold">.</span></a>
 
 
-            <ul>
-              <li><a href="/auth/signup/">SignUp</a></li>
-              <li><a href="/auth/login/">Login</a></li>
-            </ul>
-          </li>
-      
-
+      <nav id="navbar" class="navbar navbar-expand-lg">
+        <ul class="px-3">
+          <li class="nav-item mx-3 px-3"><a class="nav-link scrollto active" href="{% url 'ecommerceapp:index' %}">Home</a></li>
+          <li class="nav-item"><a class="nav-link scrollto mx-3" href="{% url 'ecommerceapp:shops' %}">Shop</a></li>
+          <li class="nav-item"><a class="nav-link scrollto mx-3" href="{% url 'ecommerceapp:about' %}">About</a></li>
 
 
           {% comment %} <li><a class="nav-link scrollto bg-danger p-3 m-2" href="/contact">Cart</a></li> {% endcomment %}
 
 
-          <li><a class="nav-link scrollto bg-dark p-3 m-2" href="/contact">Contact</a></li>
+          <li class="nav-item"><a class="nav-link scrollto mx-3" href="{% url 'ecommerceapp:contact' %}">Contact</a></li>
+          <li class="nav-item"><a class="nav-link scrollto mx-3" href="{% url 'ecommerceapp:mycart' %}">View Cart</a></li>
+
+          <li class="dropdown">
+            {% if request.user.customer %}
+            <li class="text-success">Welcome <span class="fw-bold">{{request.user.username}}!</span></li>
+            <li><a href="{% url 'ecommerceapp:customerprofile' %}">My Profile</a></li>
+            <li><a  class="bg-black text-white p-3 m-2" href="{% url 'ecommerceapp:customerlogout'  %}">Logout</a></li>
+            {% else %}
+              <a class="" href="#"><span>SignIn</span> <i class="bi bi-chevron-down"></i></a>
+
+            <ul>
+              <li><a href="{% url 'ecommerceapp:customerregistration' %}">Register</a></li>
+            
+              <li><a href="{% url 'ecommerceapp:customerlogin' %}">Login</a></li>
+            </ul>
+          </li>
+          
+          {% endif %}
+          
+          <form class="ms-4 d-flex" role="search" action="{% url 'ecommerceapp:search' %}" method="GET">
+            <input class="form-control me-2" type="search" name="keyword" placeholder="Search" aria-label="Search" required>
+            <button class="btn btn-outline-success" type="submit">Search</button>
+          </form>
         </ul>
+        
+             
+
         <i class="bi bi-list mobile-nav-toggle"></i>
       </nav><!-- .navbar -->
-
     </div>
-  </header><!-- End Header -->
+    
+  </header><!-- End Header -->""
 
   <!-- ======= Hero Section ======= -->
-  <section id="hero">
+  <section id="hero" class="min-vh-100 d-flex align-items-center justify-content-center">
     <div class="hero-container">
 
       {% block content %}
@@ -111,23 +130,23 @@
         <div class="col-lg-3 col-md-6 footer-contact">
           <h3>Yarn_me</h3>
           <p>
-            <strong>Phone:</strong> +1 5589 55488 55<br>
-            <strong>Email:</strong> info@example.com<br>
+            <strong>Phone:</strong> +2347054658283<br>
+            <strong>Email:</strong> yarnmenigeria@gmail.com<br>
           </p>
         </div>
 
         <div class="col-lg-2 col-md-6 footer-links">
           <h4>Useful Links</h4>
           <ul>
-            <li><i class="bx bx-chevron-right"></i> <a href="/">Home</a></li>
-            <li><i class="bx bx-chevron-right"></i> <a href="/shops">Shop</a></li>
-            <li><i class="bx bx-chevron-right"></i> <a href="/about">About</a></li>
+            <li><i class="bx bx-chevron-right"></i> <a href="{% url 'ecommerceapp:index' %}">Home</a></li>
+            <li><i class="bx bx-chevron-right"></i> <a href="{% url 'ecommerceapp:shops' %}">Shop</a></li>
+            <li><i class="bx bx-chevron-right"></i> <a href="{% url 'ecommerceapp:about' %}">About</a></li>
             <li><i class="bx bx-chevron-right"></i> <a href="#">Terms of service</a></li>
             <li><i class="bx bx-chevron-right"></i> <a href="#">Privacy policy</a></li>
           </ul>
         </div>
 
-        <div class="col-lg-4 col-md-6 footer-newsletter">
+        <div class="col-lg-3 col-md-6 footer-newsletter">
           <h4>Join Our Newsletter</h4>
           <form action="" method="post">
             <input type="email" name="email"><input type="submit" value="Subscribe">
@@ -153,11 +172,9 @@
       </div>
     </div>
     <div class="social-links text-center text-md-right pt-3 pt-md-0">
-      <a href="#" class="twitter"><i class="bx bxl-twitter"></i></a>
-      <a href="#" class="facebook"><i class="bx bxl-facebook"></i></a>
-      <a href="#" class="instagram"><i class="bx bxl-instagram"></i></a>
-      <a href="#" class="google-plus"><i class="bx bxl-skype"></i></a>
-      <a href="#" class="linkedin"><i class="bx bxl-linkedin"></i></a>
+      <a href="https://www.x.com/yarnmenigeria" class="twitter"><i class="bx bxl-twitter"></i></a>
+      <a href="https://www.instagram.com/yarn_me.ng" class="instagram"><i class="bx bxl-instagram"></i></a>
+      <a href="https://wa.me/message/QLA5SV6JSJJ2J1" class="whatsapp"><i class="bx bxl-whatsapp"></i></a>
     </div>
   </div>
 </footer><!-- End Footer -->

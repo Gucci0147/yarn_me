@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'django.contrib.humanize',
     'django.contrib.staticfiles',
 
     'ecommerceapp',
@@ -132,3 +133,7 @@ MEDIA_ROOT = BASE_DIR / "media"
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+PAYSTACK_SECRET_KEY = "sk_test_96875fc858534c8d77ae826f849be797a0c91905"
+PAYSTACK_PUBLIC_KEY = "pk_test_2c95a137d967a436b63eb7a3affa3a7fb2ca5248"

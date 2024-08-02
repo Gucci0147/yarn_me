@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Customer Login{% endblock title %}
+
+{% block content %}
+<style>
+    .errorlist{
+        color: red;
+    }
+</style>
+<div class="card bg-light p-5">
+
+            <h3 class="mt-5">Customer Login</h3>
+            <form action="" method="POST">
+                {% csrf_token %}
+                {{form.as_p}}
+                <button class="btn btn-primary">Login as a Customer</button>
+                {% if error %}
+                <li style="color: red;">{{error}}</li>
+                {% endif %}
+            <p>Forget Password?<a href="">Reset now</a></p>
+            <p>or don't have an account? <a href="{% url 'ecommerceapp:customerregistration' %}{% if request.GET.next %}?next={{request.GET.next}} {% endif %} class="text-primary">Register here</a></p>
+        
+            </form>
+        
+</div>
+
+{% endblock content %}

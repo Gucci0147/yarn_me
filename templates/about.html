@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-
+{% load static %}
 {% block title %}
     About Us
 {% endblock title %}
@@ -11,10 +11,37 @@
     <div class="container">
 
       <div class="section-title">
-        <h2>About</h2>
-        <h3>Learn More <span>About Us</span></h3>
+        <h2 class="m-3">About</h2>
+
+        <div>
+          <div class="row">
+            <div class="col-lg-5">
+              <h4 class="py-2 mx-2">Welcome to YARN_ME.NG! I'm Al-Jannatul Fridaous, a passionate 23 year old crochet designer and enthusiast dedicated to creating cozy, 
+                  colorful, and unique pieces. With a passion for connecting with fellow crochet lovers, I'm excited to share my expertise and collaborate 
+                  with clients who share my enthusiasm for yarn.
+              
+                  As a skilled crochet artist, I offer custom services, including bespoke dresses, hoodies, and more. 
+                  My goal is to bring your crochet dreams to life with attention to detail, quality craftsmanship, and a friendly approach. 
+                  Let's work together to create something truly special!
+            
+                  Feel free to explore my portfolio, learn more about my services, and let's get started on your next crochet project!"
+                  Or, if you'd like a slightly shorter version:
+            
+                  "Hello! I'm Al-Jannatul Fridaous, a passionate 23 year old crochet designer and enthusiast. I create cozy, colorful pieces and offer custom services, 
+                  including bespoke dresses and hoodies. Let's collaborate and bring your crochet dreams to life with quality craftsmanship and a friendly approach. 
+                  Explore my portfolio and let's get started!
+              </h4>
+            </div>
+            <div class="col-lg-6">
+              <img src="{% static "images/nana.jpg" %}" class="img-thumbnail float-end" alt="">
+            </div>
+          </div>
+        </div>
+
+        <div class="m-5">
+        <h3 class="m-3">Learn More <span>About Us</span></h3>
         <p>… IN A HEARTBEAT THREADS OF FIBER ARE YARNED INTO PERFECTION,JUST FOR YOU.</p>
-      </div>
+  
 
       <div class="row content">
         <div class="col-lg-6">
@@ -35,6 +62,77 @@
       </div>
 
     </div>
+  </div>
+
+    
+    <div class="section-title m-4">
+      <h2>Testimonial</h2>
+    </div>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-4">
+          <h2 className="mb-3 fw-bold">Hamza Boy</h2>
+          <h6 className="text-primary mb-3">PATIENT</h6>
+          <p className="px-xl-3">
+            <i className="fas fa-quote-left pe-2"></i>I was very happy with the care I received from the Dr and his staff. Very friendly,efficient and deligent.
+          </p>
+      
+        </div>
+
+        <div class="col-md-4">
+          <h2 className="mb-3 fw-bold">Maria Smantha</h2>
+          <h6 className="text-primary mb-3">PATIENT</h6>
+          <p className="px-xl-3">
+            <i className="fas fa-quote-left pe-2"></i>I was very happy with the care I received from the Dr and his staff. Very friendly,efficient and deligent.
+          </p>
+      
+        </div>
+
+        <div class="col-md-4">
+          <h2 className="mb-3 fw-bold">London Boy</h2>
+          <h6 className="text-primary mb-3">PATIENT</h6>
+          <p className="px-xl-3">
+            <i className="fas fa-quote-left pe-2"></i>I was very happy with the care I received from the Dr and his staff. Very friendly,efficient and deligent.
+          </p>
+      
+        </div>
+
+        <div class="row">
+          <div class="col-md-4">
+            <h2 className="mb-3 fw-bold">Timmy Boy</h2>
+            <h6 className="text-primary mb-3">PATIENT</h6>
+            <p className="px-xl-3">
+              <i className="fas fa-quote-left pe-2"></i>I was very happy with the care I received from the Dr and his staff. Very friendly,efficient and deligent.
+            </p>
+        
+          </div>
+
+          <div class="col-md-4">
+            <h2 className="mb-3 fw-bold">Tasha Girl</h2>
+            <h6 className="text-primary mb-3">PATIENT</h6>
+            <p className="px-xl-3">
+              <i className="fas fa-quote-left pe-2"></i>I was very happy with the care I received from the Dr and his staff. Very friendly,efficient and deligent.
+            </p>
+        
+          </div>
+
+          <div class="col-md-4">
+            <h2 className="mb-3 fw-bold">Okiki Boy</h2>
+            <h6 className="text-primary mb-3">PATIENT</h6>
+            <p className="px-xl-3">
+              <i className="fas fa-quote-left pe-2"></i>I was very happy with the care I received from the Dr and his staff. Very friendly,efficient and deligent.
+            </p>
+        
+          </div>
+        </div>
+
+        </div>
+      </div>
+     
+      </div>
+  
+
+
   </section><!-- End About Section -->
 
 {% endblock body %}
