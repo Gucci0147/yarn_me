@@ -1,3 +1,4 @@
+<!-- shop.html -->
 {% extends "base.html" %}
 
 {% block title %}
@@ -5,27 +6,43 @@
 {% endblock title %}
 
 {% block body %} 
+<section class="bg-secondary" style="height: 200px;">
 
-
-<div class="container ">
+</section>
+<div class="container">
     <h2 class="fw-bold">All Products</h2>
-<a href="/" class="text-decoration-none"><h5>Home / </a> Products</h5><hr>
+    <a href="/" class="text-decoration-none"><h5>Home / </a> Products</h5><hr>
     {% for cat in allcategories %}
-    <h4 class="fw-medium">{{cat.title}}</h4><hr>
+    <h4 class="fw-medium">{{ cat.title }}</h4><hr>
     <div class="row">
         {% for p in cat.product_set.all %}
-
-          <div class="col-md-3 card">
+        <div class="col-md-3 card">
             <div class="card-body">
-            <img src="{{ p.image.url }}" alt="" class="img-fluid" style="height: 200px; object-fit: contain;">
-            <h4><a href="{% url 'ecommerceapp:productdetail' p.slug %}">{{p.title}}</a></h4>
-            <p class="card-text">{{ p.description }}</p>
-            <h6 class="card-title mb-3">Price: <strike>#{{ p.marked_price }}</strike> #{{ p.selling_price }}</h6>
-            <a class="btn btn-secondary w-100 py-2" href="{% url 'ecommerceapp:addtocart' p.id %}">Add To Cart</a>
-            </div>
-          </div>
+                <img src="{{ p.image.url }}" alt="" class="img-fluid" style="height: 200px; object-fit: contain;">
+                <h4><a href="{% url 'ecommerceapp:productdetail' p.slug %}">{{ p.title }}</a></h4>
+                <p class="card-text">{{ p.description }}</p>
+                <h6 class="card-title mb-3">Price: <strike>#{{ p.marked_price }}</strike> #{{ p.selling_price }}</h6>
 
-          {% endfor %}
+                <form action="{% url 'ecommerceapp:addtocart' p.id %}" method="GET">
+                    {% csrf_token %}
+                    <!-- Include variant selection if applicable -->
+                    {% if p.variant == 'Size-Color' or p.variant == 'Color' %}
+                    <div class="form-group">
+                        <label for="color">Color:</label>
+                        <input type="text" name="color" id="color" class="form-control" placeholder="Enter color">
+                    </div>
+                    {% endif %}
+                    {% if p.variant == 'Size-Color' or p.variant == 'Size' %}
+                    <div class="form-group">
+                        <label for="size">Size:</label>
+                        <input type="text" name="size" id="size" class="form-control" placeholder="Enter size">
+                    </div>
+                    {% endif %}
+                    <button type="submit" class="btn btn-secondary w-100 py-2">Add To Cart</button>
+                </form>
+            </div>
+        </div>
+        {% endfor %}
     </div>
     {% endfor %}
 </div>

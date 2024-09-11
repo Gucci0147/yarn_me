@@ -1,9 +1,20 @@
 {% extends "base.html" %}
 
-{% block title %}{% endblock title %}
+{% block title %} Product Added to Cart Successfully {% endblock title %}
 
 {% block body %}
-    <div class="container">
-        <h3>Product added to cart successfully</h3>
-    </div>
+<section class="bg-secondary" style="height: 200px;">
+
+</section>
+<div class="container">
+    <h1>Product Added to Cart</h1>
+    <p>The product "{{ product.title }}" has been added to your cart successfully.</p>
+
+    <p>Color: {{ color }}</p>
+    <p>Size: {{ size }}</p>
+    <p>Price: NGN {{ product.selling_price }}</p>
+    <p>Total: NGN {{ cart.total }}</p>
+    <a href="{% url 'ecommerceapp:mycart' %}" class="btn btn-primary">View Cart</a>
+    <a href="{% url 'ecommerceapp:shops' %}" class="btn btn-secondary">Continue Shopping</a>
+</div>
 {% endblock body %}

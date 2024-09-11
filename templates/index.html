@@ -1,80 +1,88 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}
 Home
 {% endblock title %}
 
-{% block content %}
 
-<div class="hero-container">
-<h1 class="text-white fw-semibold display-1">WELCOME TO <strong>YARN_ME</strong></h1>
-<h5 class="text-white mt-3 mb-4">… IN A HEARTBEAT THREADS OF FIBER ARE YARNED INTO PERFECTION, JUST FOR YOU.</h5>
-<a  href="#about" class="btn-get-started scrollto text-decoration-none">Get Started</a>
-<a  href="{% url 'ecommerceapp:shops' %}" class="btn-get-started scrollto text-decoration-none mt-2">Shop Now</a>
+{% block body %}
+<main id="main">
 
-</div>
-{% endblock content %}
-{% block body %} 
-
-{% load static %}
-
-  <main id="main">
-
-
-      <div class="container ">
-        <h2 class="fw-bold">Products</h2>
-      <hr>
-        <div class="row">
-            {% for p in product_list %}
-    
-              <div class="col-md-3 card">
-                <div class="card-body">
-                  <h4><a href="{% url 'ecommerceapp:productdetail' p.slug %}">{{p.title}}</a></h4>
-                <img src="{{ p.image.url }}" alt="" class="img-fluid" style="height: 250px; object-fit: contain;">
-                
-                <p class="card-text">{{ p.description }}</p>
-                <h6 class="card-title mb-3">Price: <strike>#{{ p.marked_price }}</strike> #{{ p.selling_price }}</h6>
-                <a class="btn btn-secondary w-100 py-2" href="{% url 'ecommerceapp:addtocart' p.id %}">Add To Cart</a>
-                </div>
-              </div>
-    
-              {% endfor %}
+    <section id="hero" class="min-vh-100 d-flex align-items-center justify-content-center">
+        <div class="hero-container">
+            <h1 class="text-white fw-semibold display-1">WELCOME TO <strong>YARN_ME</strong></h1>
+            <h5 class="text-white mt-3 mb-4">… IN A HEARTBEAT THREADS OF FIBER ARE YARNED INTO PERFECTION, JUST FOR YOU.</h5>
+            <a href="#about" class="btn-get-started scrollto text-decoration-none">Get Started</a>
+            <a href="{% url 'ecommerceapp:shops' %}" class="btn-get-started scrollto text-decoration-none mt-2">Shop Now</a>
         </div>
-      <nav aria-label="...">
-        <ul class="pagination">
-          {% if product_list.has_previous %}
-          <li class="page-item">
-            <a class="page-link" href="?page={{ product_list.previous_page_number }}">Previous</a>
-          </li>
-          {% else %}
-          <li class="page-item disabled">
-            <a class="page-link" href="" tabindex="-1">Previous</a>
-          </li>
-          {% endif %}
+    </section>
 
-          {% for i in product_list.paginator.page_range %}
-          {% if i == product_list.number %}
-          <li class="page-item active"><a class="page-link">{{i}}</a></li>
-          {% else %}
-          <li class="page-item"><a class="page-link" href="?page={{i}}">{{i}}</a></li>
+        <div class="container">
+            <h2 class="fw-bold">Products</h2>
+            <hr>
+            <div class="row">
+                {% for p in product_list %}
+                <div class="col-md-3 card">
+                    <div class="card-body">
+                        <img src="{{ p.image.url }}" alt="" class="img-fluid" style="height: 200px; object-fit: contain;">
+                        <h4><a href="{% url 'ecommerceapp:productdetail' p.slug %}">{{ p.title }}</a></h4>
+                        <p class="card-text">{{ p.description }}</p>
+                        <h6 class="card-title mb-3">Price: <strike>#{{ p.marked_price }}</strike> #{{ p.selling_price }}</h6>
+        
+                        <form action="{% url 'ecommerceapp:addtocart' p.id %}" method="GET">
+                            {% csrf_token %}
+                            <!-- Include variant selection if applicable -->
+                            {% if p.variant == 'Size-Color' or p.variant == 'Color' %}
+                            <div class="form-group">
+                                <label for="color">Color:</label>
+                                <input type="text" name="color" id="color" class="form-control" placeholder="Enter color">
+                            </div>
+                            {% endif %}
+                            {% if p.variant == 'Size-Color' or p.variant == 'Size' %}
+                            <div class="form-group">
+                                <label for="size">Size:</label>
+                                <input type="text" name="size" id="size" class="form-control" placeholder="Enter size">
+                            </div>
+                            {% endif %}
+                            <button type="submit" class="btn btn-secondary w-100 py-2">Add To Cart</button>
+                        </form>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <nav aria-label="...">
+                <ul class="pagination">
+                    {% if product_list.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ product_list.previous_page_number }}">Previous</a>
+                    </li>
+                    {% else %}
+                    <li class="page-item disabled">
+                        <a class="page-link" href="" tabindex="-1">Previous</a>
+                    </li>
+                    {% endif %}
 
-          {% endif %}
-          {% endfor %}
+                    {% for i in product_list.paginator.page_range %}
+                    {% if i == product_list.number %}
+                    <li class="page-item active"><a class="page-link">{{i}}</a></li>
+                    {% else %}
+                    <li class="page-item"><a class="page-link" href="?page={{i}}">{{i}}</a></li>
+                    {% endif %}
+                    {% endfor %}
 
-          {% if product_list.has_next %}
-          <li class="page-item">
-            <a class="page-link" href="?page={{ product_list.next_page_number }}">Next</a>
-          </li>
-          {% else %}
-          <li class="page-item disabled">
-            <a class="page-link" href="" tabindex="-1">Next</a>
-          </li>
-          {% endif %}
-        </ul>
-      </nav>
-    
+                    {% if product_list.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ product_list.next_page_number }}">Next</a>
+                    </li>
+                    {% else %}
+                    <li class="page-item disabled">
+                        <a class="page-link" href="" tabindex="-1">Next</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+</main><!-- End #main -->
 
-
-
-  </main><!-- End #main -->
 {% endblock body %}

@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+
 # Create your models here.
 class Contact(models.Model):
     name=models.CharField(max_length=50)
@@ -36,9 +37,18 @@ class Category(models.Model):
 
     def __str__(self):
         return self.title
-    
-    
+
+
+
+
 class Product(models.Model):
+    VARIANT_CHOICES = (
+        ('None', 'None'),
+        ('Size', 'Size'),
+        ('Color', 'Color'),
+        ('Size-Color', 'Size-Color'),
+    )
+
     title = models.CharField(max_length=200)
     slug = models.SlugField(unique=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
@@ -47,9 +57,21 @@ class Product(models.Model):
     selling_price = models.PositiveIntegerField()
     description = models.TextField()
     view_count = models.PositiveIntegerField(default=0)
+    variant = models.CharField(max_length=20, choices=VARIANT_CHOICES, default='None')
 
     def __str__(self):
         return self.title
+    
+class ProductImage(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    images = models.ImageField(upload_to="products/images/")
+
+    def __str__(self):
+        return self.product.title
+    
+
+
+
 
 class Cart(models.Model):
     customer = models.ForeignKey(
@@ -61,17 +83,18 @@ class Cart(models.Model):
         return "Cart: " + str(self.id)
     
 
-
 class CartProduct(models.Model):
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name="cartproducts")
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     rate = models.PositiveIntegerField()
+    color = models.CharField(max_length=50, blank=True, null=True)  # Add this line
+    size = models.CharField(max_length=50, blank=True, null=True)   # Add this line
+
     quantity = models.PositiveIntegerField()
     subtotal = models.PositiveIntegerField()
 
     def __str__(self):
-        return "Cart: " + str(self.cart.id) + " CartProduct: " + str(self.id)
-    
+        return f"Cart: {self.cart.id} CartProduct: {self.id}"
 
 ORDER_STATUS = (
     ("Order Received", "Order Received"),

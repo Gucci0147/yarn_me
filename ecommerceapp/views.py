@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.views.generic import View, TemplateView, CreateView, FormView, DetailView, ListView
 from django.core.paginator import Paginator
+from .utils import password_reset_token
+from django.core.mail import send_mail
 from django.db.models import Q
 from django.conf import settings
 from django.contrib import messages
@@ -10,7 +12,7 @@ from django.utils.decorators import method_decorator
 import json, requests
 from django.http import JsonResponse, HttpResponse
 from django.urls import reverse_lazy, reverse
-from .forms import ContactForm, CheckoutForm, CustomerRegistrationForm, CustomerLoginForm
+from .forms import ContactForm, CheckoutForm, CustomerRegistrationForm, CustomerLoginForm, PasswordForgotForm, PasswordResetForm, ProductForm
 from .models import *
 # from payment.models import Payment
 
@@ -58,6 +60,10 @@ class ShopsView(EcomMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['allcategories'] = Category.objects.all()
+
+        # Retrieve all products and their associated colors and sizes
+        context['products'] = Product.objects.select_related('color', 'size').all()
+        
         return context
     
 class ProductDetailView(EcomMixin, TemplateView):
@@ -78,19 +84,17 @@ class AddToCartView(EcomMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # get product id from requested url
         product_id = self.kwargs.get('pro_id')
-
-        # get product
         product_obj = get_object_or_404(Product, id=product_id)
 
-        #check if cart exists
+        color = self.request.GET.get('color', '').strip()
+        size = self.request.GET.get('size', '').strip()
+
         cart_id = self.request.session.get("cart_id")
         if cart_id:
             cart_obj = get_object_or_404(Cart, id=cart_id)
-            this_product_in_cart = cart_obj.cartproducts.filter(product=product_obj)
+            this_product_in_cart = cart_obj.cartproducts.filter(product=product_obj, color=color, size=size)
             
-            # item already exists in cart
             if this_product_in_cart.exists():
                 cartproduct = this_product_in_cart.last()
                 cartproduct.quantity += 1
@@ -98,23 +102,44 @@ class AddToCartView(EcomMixin, TemplateView):
                 cartproduct.save()
                 cart_obj.total += product_obj.selling_price
                 cart_obj.save()
-
-            # new item is added in cart
             else:
                 cartproduct = CartProduct.objects.create(
-                    cart=cart_obj, product=product_obj, rate=product_obj.selling_price, quantity=1, subtotal=product_obj.selling_price)
+                    cart=cart_obj,
+                    product=product_obj,
+                    rate=product_obj.selling_price,
+                    quantity=1,
+                    subtotal=product_obj.selling_price,
+                    color=color,
+                    size=size
+                )
                 cart_obj.total += product_obj.selling_price
                 cart_obj.save()
-            
         else:
             cart_obj = Cart.objects.create(total=0)
             self.request.session['cart_id'] = cart_obj.id
-            cartproduct = CartProduct.objects.create(
-                cart=cart_obj, product=product_obj, rate=product_obj.selling_price, quantity=1, subtotal=product_obj.selling_price)
+            CartProduct.objects.create(
+                cart=cart_obj,
+                product=product_obj,
+                rate=product_obj.selling_price,
+                quantity=1,
+                subtotal=product_obj.selling_price,
+                color=color,
+                size=size
+            )
             cart_obj.total += product_obj.selling_price
             cart_obj.save()
+        
         context['cart'] = cart_obj
+        context['product'] = product_obj        
+        context['color'] = color
+        context['size'] = size
+
         return context
+
+
+
+
+
 
 
 class ManageCartView(EcomMixin, View):
@@ -168,12 +193,19 @@ class MyCartView(EcomMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         cart_id = self.request.session.get("cart_id", None)
         if cart_id:
+            # Retrieve the cart and include its cart products
             cart = get_object_or_404(Cart, id=cart_id)
+            # Include cart products with their color and size information
+            cart_products = cart.cartproducts.all()
         else:
             cart = None
+            cart_products = []
+
+        # Add cart and cart products to the context
         context["cart"] = cart
-        # print(cart.cartproducts.all())
+        context["cart_products"] = cart_products
         return context
+
 
 
     
@@ -423,11 +455,57 @@ class SearchView(TemplateView):
     
 
 
-# class PasswordForgotView(FormView):
-#     template_name = "forgotpassword.html"
-#     form_class = PasswordForgotForm
-#     success_url = '/mail-sent/'
+class PasswordForgotView(FormView):
+    template_name = "forgotpassword.html"
+    form_class = PasswordForgotForm
+    success_url = '/forgot-password/?m=s'
 
+    def form_valid(self, form):
+        # get email from user
+        email = form.cleaned_data.get("email")
+        # get current host ip/dpmain
+        url = self.request.META['HTTP_HOST']
+        # get customer and then user
+        customer = Customer.objects.get(user__email=email)
+        user = customer.user
+        # send mail to the user with email
+        text_content = 'Please Click the link below to reset your password. '
+        html_content = url + "/password-reset/" + email + \
+        "/" + password_reset_token.make_token(user) + "/"
+        send_mail(
+            'Password Reset Link | Yarn_me',
+            text_content + html_content,
+            settings.EMAIL_HOST_USER,
+            [email],
+            fail_silently=False,
+        )
+        return super().form_valid(form)
+
+class PasswordResetView(FormView):
+    template_name = "passwordreset.html"
+    form_class = PasswordResetForm
+    success_url = "/login/"
+
+    def dispatch(self, request, *args, **kwargs):
+        email = self.kwargs.get("email")
+        user = User.objects.get(email=email)
+        token = self.kwargs.get("token")
+        if user is not None and password_reset_token.check_token(user, token):
+            pass
+        else:
+            return redirect(reverse("ecommerceapp:passwordforgot") + "?m=e")
+
+        return super().dispatch(request, *args, **kwargs)
+    
+
+    def form_valid(self, form):
+        password = form.cleaned_data['new_password']
+        email = self.kwargs.get("email")
+        user = User.objects.get(email=email)
+        user.set_password(password)
+        user.save()
+        return super().form_valid(form)
+    
 
     # admin pages
 
@@ -495,18 +573,22 @@ class AdminOrderStatusChangeView(AdminRequiredMixin, View):
 
         return redirect(reverse_lazy("ecommerceapp:adminorderdetail", kwargs={"pk": order_id}))
 
-# class AdminOrderStatusChangeView(AdminRequiredMixin, View):
-#     def post(self, request, *args, **kwargs):
-#         order_id = self.kwargs.get("pk")
-#         order_obj = get_object_or_404(Order, id=order_id)
-#         new_status = request.POST.get("status")
+class AdminProductListView(AdminRequiredMixin, ListView):
+    template_name = "adminpages/adminproductlist.html"
+    queryset = Product.objects.all().order_by("-id")
+    context_object_name = "allproducts"
 
-#         # Validate the new status
-#         if new_status not in Order.STATUS_CHOICES:
-#             # Handle invalid status
-#             return redirect(reverse_lazy("ecommerceapp:adminorderdetail", kwargs={"pk": order_id}))
+class AdminProductCreateView(AdminRequiredMixin, CreateView):
+    template_name = "adminpages/adminproductcreate.html"
+    form_class = ProductForm
+    success_url = reverse_lazy("ecommerceapp:adminproductlist")
 
-#         order_obj.order_status = new_status
-#         order_obj.save()
-
-#         return redirect(reverse_lazy("ecommerceapp:adminorderdetail", kwargs={"pk": order_id}))
+    def form_valid(self, form):
+        p = form.save()
+        images = self.request.FILES.getlist("more_images")
+        for i in images:
+            ProductImage.objects.create(product=p, images=i)
+        return super().form_valid(form)
+    
+        
+    

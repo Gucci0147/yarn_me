@@ -3,48 +3,46 @@
 {% block title %}Make Payment{% endblock title %}
 
 {% block body %}
+<section class="bg-secondary" style="height: 200px;">
+
+</section>
     <script src="https://js.paystack.co/v1/inline.js"></script>
+    <div>
+        <form id="paymentForm">
+            <h2>You're about to pay {{ currency }}.{{ cart.total }}</h2>
+            <!-- Hidden input fields to hold the required values -->
+            <input type="" id="email-address" value="{{ email }}">
+            <input type="hidden" id="amount" value="{{ cart.total }}">
+            <input type="hidden" id="currency" value="{{ currency }}">
+            <button type="submit" onclick="payWithPaystack()">Pay</button>
+        </form>
+    </div>
+
+
     <script>
-        window.onload = function() {
-            payWithPaystack();
-        };
+        const paymentForm = document.getElementById('paymentForm');
+        paymentForm.addEventListener("submit", payWithPaystack, false);
 
-        function payWithPaystack() {
-            var handler = PaystackPop.setup({
-                key: 'pk_test_2c95a137d967a436b63eb7a3affa3a7fb2ca5248', // Replace with your public key
-                email: 'yarnmenigeria@gmail.com',
-                amount: {{ amount }} * 100,
-                currency: '{{ currency }}',
-                ref: '{{ reference }}',
-                onClose: function() {
-                    alert('Window closed.');
-                },
-                callback: function(response) {
-                    let message = 'Payment complete! Reference: ' + response.reference;
-                    alert(message);
-                    // Optionally, you can redirect to a success page or make an AJAX request to your backend
-                
-                     // Verify transaction on the backend
-                     fetch('/paystack-verify/', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRFToken': '{{ csrf_token }}',
-                        },
-                        body: JSON.stringify({ reference: response.reference })
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.status === 'success') {
-                            alert('Payment verified successfully!');
-                        } else {
-                            alert('Payment verification failed.');
+        function payWithPaystack(e) {
+        e.preventDefault();
+ 
+        let handler = PaystackPop.setup({
+            key: 'pk_live_e4ffd7870da75d87757dbd9afee9c7b00230607a', // Replace with your public key
+            email: document.getElementById("email-address").value,
+            amount: document.getElementById("amount").value * 100,
+            currency: document.getElementById("currency").value, // Ensure this field is present in your form
+            ref: '' + Math.floor((Math.random() * 1000000000) + 1), // generates a pseudo-unique referen ce. Please replace with a reference you generated. Or remove the line entirely so our API will generate one for you
+            onClose: function(){
+            alert('Window closed.');
+            },
+            callback: function(response){
+            let message = 'Payment complete! Reference: ' + response.reference;
+            alert(message);
+            }
+        });
 
-                        }
-                    });
-                }
-            });
-            handler.openIframe();
+        handler.openIframe();
         }
+
     </script>
 {% endblock body %}

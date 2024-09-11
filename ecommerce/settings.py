@@ -106,6 +106,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
@@ -129,11 +130,21 @@ STATICFILES_DIRS = [BASE_DIR / "static"]
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / "media"
+
+
+
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = "emmanueltimileyin171@gmail.com"
+EMAIL_HOST_PASSWORD = "ccdi pfwb qobu nhcv"
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-PAYSTACK_SECRET_KEY = "sk_test_96875fc858534c8d77ae826f849be797a0c91905"
-PAYSTACK_PUBLIC_KEY = "pk_test_2c95a137d967a436b63eb7a3affa3a7fb2ca5248"
+PAYSTACK_SECRET_KEY = "sk_live_936ee2e180d9df6a3211b1f2227a40015259425e"
+PAYSTACK_PUBLIC_KEY = "pk_live_e4ffd7870da75d87757dbd9afee9c7b00230607a"

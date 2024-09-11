@@ -29,7 +29,8 @@ urlpatterns = [
 
     path("search/", SearchView.as_view(), name="search"),
 
-    # path("forgot-password/", PasswordForgotView.as_view(), name="passwordforgot"),
+    path("forgot-password/", PasswordForgotView.as_view(), name="passwordforgot"),
+    path("password-reset/<email>/<token>/", PasswordResetView.as_view(), name="passwordreset"),
 
     # Admin Side pages
 
@@ -39,4 +40,7 @@ urlpatterns = [
     path("admin-all-orders/", AdminOrderListView.as_view(), name="adminorderlist"),
 
     path("admin-order/<int:pk>-change/", AdminOrderStatusChangeView.as_view(), name="adminorderstatuschange"),
+
+    path("admin-product/list/", AdminProductListView.as_view(), name="adminproductlist"),
+    path("admin-product/add/", AdminProductCreateView.as_view(), name="adminproductcreate"),
 ]

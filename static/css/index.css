@@ -28,7 +28,7 @@
   
   /* Styling for submit button */
   button[type="submit"] {
-    background-color: #4CAF50;
+    background-color: rgba(45, 37, 38, 0.9);
     color: white;
     padding: 10px 20px;
     border: none;
@@ -37,6 +37,6 @@
   }
   
   button[type="submit"]:hover {
-    background-color: #45a049;
+    background-color: rgba(45, 37, 38, 0.9);
   }
   

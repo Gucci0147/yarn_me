@@ -353,7 +353,7 @@ h6 {
   position: relative;
 }
 
-#hero:before {
+/* #hero:before {
   content: "";
   background: rgba(0, 0, 0, 0.6);
   position: absolute;
@@ -361,7 +361,7 @@ h6 {
   top: 0;
   left: 0;
   right: 0;
-}
+} */
 
 #hero .hero-container {
   position: absolute;
@@ -438,9 +438,7 @@ h6 {
 }
 
 @media (max-height: 500px) {
-  #hero {
-    height: 80vh;
-  }
+  
 }
 
 /*--------------------------------------------------------------

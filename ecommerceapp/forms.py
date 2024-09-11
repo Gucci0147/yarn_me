@@ -1,14 +1,13 @@
 from django import forms
-from .models import Contact, Order, Customer
+from .models import Contact, Order, Customer, Product
 from django.contrib.auth.models import User
-from django.core.mail import send_mail
 
 class ContactForm(forms.ModelForm):
 
     class Meta:
         model = Contact
         fields = ['name', 'email', 'phonenumber', 'desc']
-        
+
 
 class CheckoutForm(forms.ModelForm):
     PAYMENT_METHOD_CHOICES = [
@@ -54,8 +53,81 @@ class CustomerLoginForm(forms.Form):
     password = forms.CharField(widget=forms.PasswordInput())
 
 
+class ProductForm(forms.ModelForm):
+    more_images = forms.FileField(required=False, widget=forms.FileInput(attrs={
+        "class": "form-control",
+        "multiple": True
+    }))
+
+    class Meta:
+        model = Product
+        fields = ["title", "slug", "category", "image", "marked_price", "selling_price", "description", "variant"]
+
+        widgets = {
+            "title": forms.TextInput(attrs={
+                "class": "form-control",
+                "placeholder": "Enter the product title here..."
+            }),
+            "slug": forms.TextInput(attrs={
+                "class": "form-control",
+                "placeholder": "Enter the unique slug here..."
+            }),
+            "category": forms.Select(attrs={
+                "class": "form-control",
+            }),
+            "image": forms.ClearableFileInput(attrs={
+                "class": "form-control"
+            }),
+            "marked_price": forms.NumberInput(attrs={
+                "class": "form-control",
+                "placeholder": "Marked price of the product..."
+            }),
+            "selling_price": forms.NumberInput(attrs={
+                "class": "form-control",
+                "placeholder": "Selling price of the product..."
+            }),
+            "description": forms.Textarea(attrs={
+                "class": "form-control",                
+                "placeholder": "Description of the product...",
+                "rows": 5
+            }),
+            "variant": forms.Select(attrs={
+                "class": "form-control",
+            }),
+        }
+
 class PasswordForgotForm(forms.Form):
     email = forms.CharField(widget=forms.EmailInput(attrs={
         "class": "form-control",
         "placeholder": "Enter the email used in customer account..."
     }))
+
+    def clean_email(self):
+        e = self.cleaned_data.get("email")
+        if Customer.objects.filter(user__email=e).exists():
+            pass
+        else:
+            raise forms.ValidationError(
+                "Customer with this account does not exists..")
+        return e
+    
+
+class PasswordResetForm(forms.Form):
+    new_password = forms.CharField(widget=forms.PasswordInput(attrs={
+        'class': 'form-control',
+        'autocomplete': 'new-password',
+        'placeholder': 'Enter New Password',
+    }), label="New Password")
+    confirm_new_password = forms.CharField(widget=forms.PasswordInput(attrs={
+        'class': 'form-control',
+        'autocomplete': 'new-password',
+        'placeholder': 'Confirm New Password',
+    }), label="Confirm New Password")
+
+    def clean_confirm_new_password(self):
+        new_password = self.cleaned_data.get("new_password")
+        confirm_new_password = self.cleaned_data.get("confirm_new_password")
+        if new_password != confirm_new_password:
+            raise forms.ValidationError(
+                "New Passwords did not match!")
+        return confirm_new_password

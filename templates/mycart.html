@@ -1,17 +1,23 @@
+<!-- mycart.html -->
 {% extends "base.html" %}
 
 {% block title %} My cart {% endblock title %}
 
 {% block body %}
+<section class="bg-secondary" style="height: 200px;">
+
+</section>
 <div class="container">
     <div class="row">
         <div class="col-md-8">
-            <h4 class="py-3"> Items in my cart </h4><hr>
+            <h4 class="py-3">Items in my cart</h4><hr>
             <table class="table">
                 <thead>
                     <tr>
                         <th>SN</th>
                         <th>Product</th>
+                        <th>Color</th>
+                        <th>Size</th>
                         <th>Rate</th>
                         <th>Quantity</th>
                         <th>Subtotal</th>
@@ -20,35 +26,34 @@
                 </thead>
                 <tbody>
                     {% for cp in cart.cartproducts.all %}
-                    <tr>    
-                        <td>{{forloop.counter}}</td>
-                        <td>{{cp.product.title}}</td>
-                        <td>#{{cp.rate}}</td>
-                        <td>{{cp.quantity}}</td>
-                        <td>#{{cp.subtotal}}</td>
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ cp.product.title }}</td>
+                        <td>{{ cp.color }}</td>
+                        <td>{{ cp.size }}</td>
+                        <td>#{{ cp.rate }}</td>
+                        <td>{{ cp.quantity }}</td>
+                        <td>#{{ cp.subtotal }}</td>
                         <td>
                             <a href="{% url 'ecommerceapp:managecart' cp.id %}?action=inc" class="btn btn-primary"> + </a>
                             <a href="{% url 'ecommerceapp:managecart' cp.id %}?action=dcr" class="btn btn-warning"> - </a>
                             <a href="{% url 'ecommerceapp:managecart' cp.id %}?action=rmv" class="btn btn-danger"> * </a>
                         </td>
-
                     </tr>
                     {% endfor %}
                     <tr>
-                        <th colspan="4" class="text-right">Total:</th>
-                        <th>#{{cart.total}}</th>
+                        <th colspan="6" class="text-right">Total:</th>
+                        <th>#{{ cart.total }}</th>
                         {% if cart.cartproducts.all %}
                         <th><a href="{% url 'ecommerceapp:emptycart' %}">Empty Cart</a></th>
                         {% endif %}
                     </tr>
-                    
                     {% if cart.cartproducts.all %}
                     <tr>
                         <th><a class="btn btn-secondary" href="{% url 'ecommerceapp:checkout' %}">Checkout</a></th>
                     </tr>
                     {% endif %}
                 </tbody>
-
             </table>
         </div>
     </div>
