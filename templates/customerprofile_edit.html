@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Customer Edit Profile{% endblock title %}
+
+{% block body %}
+<section class="bg-secondary" style="height: 200px;">
+
+</section>
+
+<!-- Edit Profile Section -->
+<div id="edit-profile" class="mt-5">
+    <a href="{% url 'ecommerceapp:customerprofile' %}">Back to Profile</a>
+
+    <div class="card border-0 shadow-lg">
+        <div class="card-header bg-secondary text-white">
+            <h3 id="list-item-2">Edit Profile</h3>
+        </div>
+        <div class="card-body bg-light">
+            <form action="{% url 'ecommerceapp:customerprofile_edit' %}" method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-success bg-success">Save Changes</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock body %}

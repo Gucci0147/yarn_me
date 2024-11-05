@@ -7,7 +7,7 @@
 <section class="bg-secondary" style="height: 200px;">
 
 </section>
-<div class="container">
+<div class="card shadow-lg border-0 m-5 p-5">
     <div class="row">
         <div class="col-md-8">
             <h4 class="py-3">Items in my cart</h4><hr>
@@ -35,7 +35,7 @@
                         <td>{{ cp.quantity }}</td>
                         <td>#{{ cp.subtotal }}</td>
                         <td>
-                            <a href="{% url 'ecommerceapp:managecart' cp.id %}?action=inc" class="btn btn-primary"> + </a>
+                            <a href="{% url 'ecommerceapp:managecart' cp.id %}?action=inc" class="btn btn-success"> + </a>
                             <a href="{% url 'ecommerceapp:managecart' cp.id %}?action=dcr" class="btn btn-warning"> - </a>
                             <a href="{% url 'ecommerceapp:managecart' cp.id %}?action=rmv" class="btn btn-danger"> * </a>
                         </td>
@@ -50,7 +50,7 @@
                     </tr>
                     {% if cart.cartproducts.all %}
                     <tr>
-                        <th><a class="btn btn-secondary" href="{% url 'ecommerceapp:checkout' %}">Checkout</a></th>
+                        <th><a class="btn btn-success" href="{% url 'ecommerceapp:checkout' %}">Checkout</a></th>
                     </tr>
                     {% endif %}
                 </tbody>

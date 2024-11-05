@@ -1,7 +1,10 @@
 from django.urls import path
 from .views import *
+from . import views
+
 
 app_name = "ecommerceapp"
+
 urlpatterns = [
     path("", IndexView.as_view(), name="index"),
     path("about/", AboutView.as_view(), name="about"),
@@ -24,8 +27,14 @@ urlpatterns = [
     path("logout/", CustomerLogoutView.as_view(), name="customerlogout"),
     path("login/", CustomerLoginView.as_view(), name="customerlogin"),
 
+
     path("profile/", CustomerProfileView.as_view(), name="customerprofile"),
     path("profile/order-<int:pk>/", CustomerOrderDetailView.as_view(), name="customerorderdetail"),
+    
+    path("profile/edit/", CustomerProfileEditView.as_view(), name="customerprofile_edit"),
+
+    path('change_password/', views.change_password, name='change_password'),
+
 
     path("search/", SearchView.as_view(), name="search"),
 

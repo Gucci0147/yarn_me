@@ -3,7 +3,11 @@
 {% block title %}Order Detail{% endblock title %}
 
 {% block body %}
-<div class="container">
+<section class="bg-secondary" style="height: 200px;">
+
+</section>
+
+<div class="card shadow-lg border-0 bg-light m-5 p-5">
     <div class="row">
         <div class="col-md-8 mx-auto">
             <h3 class="fw-bold">Order Detail</h3> <hr>
@@ -47,7 +51,7 @@
                 <option value="{{i}}" {% if i == ord_obj.order_status %}selected{% endif %}>{{j}}</option>
                 {% endfor %}
             </select>
-            <button class="btn btn-dark">Change</button>
+            <button class="btn btn-success">Change</button>
         </form>
         </div>
     </div>

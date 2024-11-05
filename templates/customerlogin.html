@@ -3,30 +3,29 @@
 {% block title %}Customer Login{% endblock title %}
 
 {% block body %}
-<section class="bg-secondary" style="height: 200px;">
+<section class="bg-secondary" style="height: 200px;"></section>
 
-</section>
 <style>
-    .errorlist{
+    .errorlist {
         color: red;
     }
 </style>
 
-<div class="card bg-light p-5">
-
-            <h3 class="mt-5">Customer Login</h3>
-            <form action="" method="POST">
-                {% csrf_token %}
-                {{form.as_p}}
-                <button class="btn btn-primary">Login as a Customer</button>
-                {% if error %}
-                <li style="color: red;">{{error}}</li>
-                {% endif %}
-            <p>Forget Password?<a href="{% url 'ecommerceapp:passwordforgot' %}">Reset now</a></p>
-            <p>or don't have an account? <a href="{% url 'ecommerceapp:customerregistration' %}{% if request.GET.next %}?next={{request.GET.next}} {% endif %} class="text-primary">Register here</a></p>
-        
-            </form>
-        
+<div class="card shadow-lg border-0 bg-light m-5 p-5">
+    <h3 class="mt-5">Customer Login</h3>
+    <form action="" method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button class="btn btn-primary">Login as a Customer</button>
+        {% if error %}
+            <li style="color: red;">{{ error }}</li>
+        {% endif %}
+    </form>
+    <p>Forget Password? <a href="{% url 'ecommerceapp:passwordforgot' %}">Reset now</a></p>
+    <p>Don't have an account? 
+        <a href="{% url 'ecommerceapp:customerregistration' %}{% if request.GET.next %}?next={{ request.GET.next }}{% endif %}" class="text-primary">
+            Register here
+        </a>
+    </p>
 </div>
-
 {% endblock body %}

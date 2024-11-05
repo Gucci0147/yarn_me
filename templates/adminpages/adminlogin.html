@@ -2,22 +2,25 @@
 
 {% block title %}Admin Login{% endblock title %}
 
-{% block content %}
+{% block body %}
+<section class="bg-secondary" style="height: 200px;">
+
+</section>
 <style>
     .errorlist{
         color: red;
     }
 </style>
-<div class="card bg-light p-5">
+<div class="card shadow-lg border-0 bg-light m-5 p-5">
             <h3>Admin Login Form</h3>
             <form action="" method="POST">
                 {% csrf_token %}
                 {{form.as_p}}
-                <button class="btn btn-primary">Login as a Admin</button>
+                <button class="btn btn-success">Login as a Admin</button>
                 {% if error %}
                 <li style="color: red;">{{error}}</li>
                 {% endif %}
             </form>
 </div>
 
-{% endblock content %}
+{% endblock body %}

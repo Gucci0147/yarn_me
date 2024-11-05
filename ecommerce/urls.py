@@ -21,4 +21,6 @@ from django.conf import settings
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include("ecommerceapp.urls")),
+    path('captcha/', include('captcha.urls')),  # Add this
+
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

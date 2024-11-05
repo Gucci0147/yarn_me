@@ -6,7 +6,7 @@
 <section class="bg-secondary" style="height: 200px;">
 
 </section>
-<div class="container">
+<div class="card shadow-lg border-0 m-5 p-5">
     <h1>Product Added to Cart</h1>
     <p>The product "{{ product.title }}" has been added to your cart successfully.</p>
 
@@ -14,7 +14,7 @@
     <p>Size: {{ size }}</p>
     <p>Price: NGN {{ product.selling_price }}</p>
     <p>Total: NGN {{ cart.total }}</p>
-    <a href="{% url 'ecommerceapp:mycart' %}" class="btn btn-primary">View Cart</a>
+    <a href="{% url 'ecommerceapp:mycart' %}" class="btn btn-success">View Cart</a>
     <a href="{% url 'ecommerceapp:shops' %}" class="btn btn-secondary">Continue Shopping</a>
 </div>
 {% endblock body %}

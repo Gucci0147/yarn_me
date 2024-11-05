@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
-from django.views.generic import View, TemplateView, CreateView, FormView, DetailView, ListView
+from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import View, TemplateView, CreateView, FormView, DetailView, ListView, UpdateView
 from django.core.paginator import Paginator
 from .utils import password_reset_token
 from django.core.mail import send_mail
@@ -12,7 +14,9 @@ from django.utils.decorators import method_decorator
 import json, requests
 from django.http import JsonResponse, HttpResponse
 from django.urls import reverse_lazy, reverse
-from .forms import ContactForm, CheckoutForm, CustomerRegistrationForm, CustomerLoginForm, PasswordForgotForm, PasswordResetForm, ProductForm
+from .forms import ContactForm, CheckoutForm, CustomerRegistrationForm, CustomerLoginForm, PasswordForgotForm, PasswordResetForm, ProductForm, ProfileEditForm
+from django.contrib.auth.forms import PasswordChangeForm
+
 from .models import *
 # from payment.models import Payment
 
@@ -376,19 +380,16 @@ class CustomerLoginView(FormView):
         usr = authenticate(username=uname, password=pword)
         if usr is not None and Customer.objects.filter(user=usr).exists():
             login(self.request, usr)
+            return super().form_valid(form)
         else:
-            return render(self.request, self.template_name, {"form": self.form_class, "error": "Invalid credentials"})
-        
-        return super().form_valid(form)
+            return render(self.request, self.template_name, {
+                "form": form,
+                "error": "Invalid credentials"
+            })
     
     def get_success_url(self):
-        if "next" in self.request.GET:
-            next_url = self.request.GET.get("next")
-            return next_url
-        else:
-            return self.success_url
-
-
+        next_url = self.request.GET.get("next")
+        return next_url if next_url else self.success_url
 
 class AboutView(EcomMixin, TemplateView):
     template_name = "about.html"
@@ -422,9 +423,18 @@ class CustomerProfileView(TemplateView):
         context = super().get_context_data(**kwargs)
         customer = self.request.user.customer
         context["customer"] = customer
-        orders = Order.objects.filter(cart__customer=customer).order_by("-id")
-        context["orders"] = orders
+        context["orders"] = Order.objects.filter(cart__customer=customer).order_by("-id")
         return context
+
+class CustomerProfileEditView(LoginRequiredMixin, UpdateView):
+    model = Customer
+    form_class = ProfileEditForm
+    template_name = "customerprofile_edit.html"
+    success_url = '/profile/'
+
+    def get_object(self, queryset=None):
+        return self.request.user.customer
+
     
 class CustomerOrderDetailView(DetailView):
     template_name = "customerorderdetail.html"
@@ -506,6 +516,17 @@ class PasswordResetView(FormView):
         user.save()
         return super().form_valid(form)
     
+def change_password(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(data=request.POST, user=request.user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, ('You Have Successfully Edited Your Password'))
+            return redirect('index')
+    else:
+        form = PasswordChangeForm(user=request.user)
+    context = {'form': form}
+    return render(request, 'change_password.html', context)
 
     # admin pages
 

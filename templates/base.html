@@ -48,7 +48,7 @@
 
       <nav id="navbar" class="navbar navbar-expand-lg">
         <ul class="px-3">
-          <li class="nav-item mx-3 px-3"><a class="nav-link scrollto active" href="{% url 'ecommerceapp:index' %}">Home</a></li>
+          <li class="nav-item!"><a class="nav-link scrollto active mx-3" href="{% url 'ecommerceapp:index' %}">Home</a></li>
           <li class="nav-item"><a class="nav-link scrollto mx-3" href="{% url 'ecommerceapp:shops' %}">Shop</a></li>
           <li class="nav-item"><a class="nav-link scrollto mx-3" href="{% url 'ecommerceapp:about' %}">About</a></li>
 
@@ -65,7 +65,7 @@
             <li><a href="{% url 'ecommerceapp:customerprofile' %}">My Profile</a></li>
             <li><a  class="bg-black text-white p-3 m-2" href="{% url 'ecommerceapp:customerlogout'  %}">Logout</a></li>
             {% else %}
-              <a class="" href="#"><span>SignIn</span> <i class="bi bi-chevron-down"></i></a>
+              <a class="nav-link scrollto mx-3" href="#">SignIn<i class="bi bi-chevron-down mx-3"></i></a>
 
             <ul>
               <li><a href="{% url 'ecommerceapp:customerregistration' %}">Register</a></li>
@@ -78,7 +78,7 @@
           
           <form class="ms-4 d-flex" role="search" action="{% url 'ecommerceapp:search' %}" method="GET">
             <input class="form-control me-2" type="search" name="keyword" placeholder="Search" aria-label="Search" required>
-            <button class="btn btn-outline-success" type="submit">Search</button>
+            <button class="btn bg-success" type="submit">Search</button>
           </form>
         </ul>
         
@@ -124,10 +124,10 @@
  <footer id="footer">
 
   <div class="footer-top">
-    <div class="container">
+    <div class="container my-auto">
       <div class="row">
 
-        <div class="col-lg-3 col-md-6 footer-contact">
+        <div class="col-lg-3 footer-contact">
           <h3>Yarn_me</h3>
           <p>
             <strong>Phone:</strong> +2347054658283<br>
@@ -135,7 +135,7 @@
           </p>
         </div>
 
-        <div class="col-lg-2 col-md-6 footer-links">
+        <div class="col-lg-3 footer-links">
           <h4>Useful Links</h4>
           <ul>
             <li><i class="bx bx-chevron-right"></i> <a href="{% url 'ecommerceapp:index' %}">Home</a></li>
@@ -146,10 +146,10 @@
           </ul>
         </div>
 
-        <div class="col-lg-3 col-md-6 footer-newsletter">
+        <div class="col-lg-3 footer-newsletter">
           <h4>Join Our Newsletter</h4>
           <form action="" method="post">
-            <input type="email" name="email"><input type="submit" value="Subscribe">
+            <input type="email" name="email"><input type="submit" class="bg-success" value="Subscribe">
           </form>
         </div>
 
@@ -157,9 +157,9 @@
     </div>
   </div>
 
-  <div class="container d-md-flex py-4">
+  <div class="container-fluid d-md-flex py-4 bg-dark">
 
-    <div class="me-md-auto text-center text-md-start">
+    <div class="container me-md-auto text-center text-md-start">
       <div class="copyright">
         &copy; Copyright <strong><span>Yarn_me</span></strong>. All Rights Reserved
       </div>
@@ -171,7 +171,7 @@
         Designed by <a href="/">Gucci</a>
       </div>
     </div>
-    <div class="social-links text-center text-md-right pt-3 pt-md-0">
+    <div class="social-links text-center text-md-right pt-3 pt-md-0 mx-5">
       <a href="https://www.x.com/yarnmenigeria" class="twitter"><i class="bx bxl-twitter"></i></a>
       <a href="https://www.instagram.com/yarn_me.ng" class="instagram"><i class="bx bxl-instagram"></i></a>
       <a href="https://wa.me/message/QLA5SV6JSJJ2J1" class="whatsapp"><i class="bx bxl-whatsapp"></i></a>

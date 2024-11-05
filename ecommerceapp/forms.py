@@ -1,8 +1,12 @@
 from django import forms
 from .models import Contact, Order, Customer, Product
+from django.contrib.auth.forms import  UserChangeForm
 from django.contrib.auth.models import User
+from captcha.fields import CaptchaField
+
 
 class ContactForm(forms.ModelForm):
+    
 
     class Meta:
         model = Contact
@@ -35,6 +39,8 @@ class CustomerRegistrationForm(forms.ModelForm):
     username = forms.CharField(widget=forms.TextInput())
     password = forms.CharField(widget=forms.PasswordInput())
     email = forms.CharField(widget=forms.EmailInput())
+    captcha = CaptchaField()  # Add this field
+
     class Meta:
         model = Customer
         fields = ["username", "password", "email", "full_name", "address"]
@@ -51,13 +57,15 @@ class CustomerRegistrationForm(forms.ModelForm):
 class CustomerLoginForm(forms.Form):
     username = forms.CharField(widget=forms.TextInput())
     password = forms.CharField(widget=forms.PasswordInput())
+    captcha = CaptchaField()  # Add this field
+
 
 
 class ProductForm(forms.ModelForm):
-    more_images = forms.FileField(required=False, widget=forms.FileInput(attrs={
-        "class": "form-control",
-        "multiple": True
-    }))
+    # more_images = forms.FileField(required=False, widget=forms.FileInput(attrs={
+    #     "class": "form-control",
+    #     "multiple": True
+    # }))
 
     class Meta:
         model = Product
@@ -131,3 +139,23 @@ class PasswordResetForm(forms.Form):
             raise forms.ValidationError(
                 "New Passwords did not match!")
         return confirm_new_password
+    
+
+class ProfileEditForm(forms.ModelForm):
+    full_name = forms.CharField(
+        widget=forms.TextInput(attrs={'class': 'form-control'})
+    )
+    password = forms.CharField(
+        label='', widget=forms.HiddenInput(), required=False
+    )
+
+    class Meta:
+        model = Customer
+        fields = ('full_name', 'address', 'password')
+
+# class PasswordChangeForm(forms.ModelForm):
+#     def __init__(self, *args, **kwargs):
+#         super().__init__(*args, **kwargs)
+#         self.fields['old_password'].widget.attrs.update({'placeholder': 'Old Password'})
+#         self.fields['new_password1'].widget.attrs.update({'placeholder': 'New Password'})
+#         self.fields['new_password2'].widget.attrs.update({'placeholder': 'Confirm New Password'})

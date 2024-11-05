@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'ecommerceapp',
+    'captcha',
+
 ]
 
 MIDDLEWARE = [
@@ -144,6 +146,12 @@ EMAIL_HOST_PASSWORD = "ccdi pfwb qobu nhcv"
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# reCAPTCHA Keys
+RECAPTCHA_PUBLIC_KEY = '6LciwGgqAAAAAOWMirFe41XJpYPXKz8MOtYeypJu'
+RECAPTCHA_PRIVATE_KEY = '6LciwGgqAAAAALDG0HB--636myeobWLIUlJwNVYY'
+
 
 
 PAYSTACK_SECRET_KEY = "sk_live_936ee2e180d9df6a3211b1f2227a40015259425e"

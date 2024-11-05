@@ -3,49 +3,89 @@
 {% block title %}My Profile{% endblock title %}
 
 {% block body %}
+<section class="bg-secondary" style="height: 200px;"></section>
 
-<section class="bg-secondary" style="height: 200px;">
-
-</section>
 <div class="container mt-5">
     <div class="row">
-        <div class="col-md-6">
-         <div class="card">
-          <div class="card-body">
-            <h3>Customer Information</h3><hr>
-            <p><span class="font-weight-bold">Name: </span> {{customer.full_name}}</p>
-            <p><span class="font-weight-bold">Username: </span> {{customer.user.username}}</p>
-            <p><span class="font-weight-bold">Email: </span> {{customer.user.email}}</p>
-            <p><span class="font-weight-bold">Address: </span> {{customer.address}}</p>
-            <p><span class="font-weight-bold">Joined on: </span> {{customer.joined_on}}</p>
-          </div> 
+        <!-- Sidebar -->
+        <div class="col-md-3">
+            <div class="card border-0 shadow-lg bg-light text-white" style="height: 400px;">
+                <div class="card-body">
+                    <h4 class="card-title text-success fw-bold py-4">Account Settings</h4>
+
+                    <div id="simple-list-example" class="simple-list-example-scrollspy text-secondary">
+                        <a class="list-group-item list-group-item-action py-3" href="#list-item-1">Customer Information</a>
+                        <a class="list-group-item list-group-item-action py-3" href="{% url 'ecommerceapp:customerprofile_edit' %}">Edit Profile</a>
+                        <a class="list-group-item list-group-item-action py-3" href="#list-item-3">Previous Orders</a>
+                        <a class="list-group-item list-group-item-action py-3" href="{% url 'ecommerceapp:change_password' %}">Change Password</a>
+                    </div> 
+                  
+                </div>
+            </div>
         </div>
-        </div>
-        <div class="col-md-6">
-            <h3>Previous Orders</h3>
-            <hr>
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>SN</th>
-                        <th>Order ID</th>
-                        <th>Amount</th>
-                        <th>Ordered on</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for ord in orders %}
-                    <tr>
-                        <td>{{forloop.counter}}</td>
-                        <td><a href="{% url 'ecommerceapp:customerorderdetail' ord.pk %}">#ORDER_{{ord.id}}</a></td>
-                        <td>NGN {{ord.total}}</td>
-                        <td>{{ord.created_at|timesince}} ago</td>
-                        <td>{{ord.order_status}}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+
+        <!-- Main Content -->
+        <div class="col-md-9">
+            <!-- Customer Information Section -->
+            <div data-bs-spy="scroll" data-bs-target="#simple-list-example" data-bs-offset="0" data-bs-smooth-scroll="true" class="scrollspy-example" tabindex="0">
+                <div class="card border-0 shadow-lg">
+                    <div class="card-header bg-secondary text-white">
+                        <h3 id="list-item-1">Customer Information</h3>
+                    </div>
+                    <div class="card-body bg-light text-dark">
+                        <p class="font-weight-bold text-success">Name:</p>
+                        <p class="border p-2 rounded bg-grey text-dark">{{ customer.full_name }}</p>
+                        
+                        <p class="font-weight-bold text-success">Username:</p>
+                        <p class="border p-2 rounded bg-grey text-dark">{{ customer.user.username }}</p>
+                        
+                        <p class="font-weight-bold text-success">Email:</p>
+                        <p class="border p-2 rounded bg-grey text-dark">{{ customer.user.email }}</p>
+                        
+                        <p class="font-weight-bold text-success">Address:</p>
+                        <p class="border p-2 rounded bg-grey text-dark">{{ customer.address }}</p>
+                        
+                        <p class="font-weight-bold text-success">Joined on:</p>
+                        <p class="border p-2 rounded bg-grey text-dark">{{ customer.joined_on }}</p>
+                    </div>
+                </div>
+            </div>
+
+
+            
+
+            <!-- Previous Orders Section -->
+            <div id="previous-orders" class="my-5 bg-dark">
+                <div class="card border-0 border-0 shadow-lg p-4">
+                    <div class="card-header bg-secondary text-white">
+                        <h3 id="list-item-3">Previous Orders</h3>
+                    </div>
+                    <div class="card-body bg-light">
+                        <table class="table table-striped table-bordered">
+                            <thead class="bg-success text-white">
+                                <tr>
+                                    <th>SN</th>
+                                    <th>Order ID</th>
+                                    <th>Amount</th>
+                                    <th>Ordered on</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for ord in orders %}
+                                <tr>
+                                    <td>{{ forloop.counter }}</td>
+                                    <td><a class="text-success" href="{% url 'ecommerceapp:customerorderdetail' ord.pk %}">#ORDER_{{ ord.id }}</a></td>
+                                    <td>NGN {{ ord.total }}</td>
+                                    <td>{{ ord.created_at|timesince }} ago</td>
+                                    <td><span class="badge badge-success text-success">{{ ord.order_status }}</span></td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
